@@ -1,13 +1,32 @@
 import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
+import { RadioGroup } from 'components/radio-group';
 import { Select } from 'components/select';
-import { fontFamilyOptions } from 'src/constants/articleProps';
+import {
+	OptionType,
+	fontFamilyOptions,
+	fontSizeOptions,
+} from 'src/constants/articleProps';
 import cn from 'classnames';
 
 import styles from './ArticleParamsForm.module.scss';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import {
+	Dispatch,
+	FormEvent,
+	SetStateAction,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 
-export const ArticleParamsForm = () => {
+type TArticleProps = {
+	fontFamily: OptionType;
+	setFontFamily: Dispatch<SetStateAction<OptionType>>;
+	handleReset?: () => void;
+	handleSubmit: () => void;
+};
+
+export const ArticleParamsForm = (props: TArticleProps) => {
 	const [isOpen, setOpen] = useState(false);
 	const formContainer = useRef<HTMLElement>(null);
 
@@ -35,7 +54,12 @@ export const ArticleParamsForm = () => {
 
 	const handleFormSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		console.warn('Form submitted');
+		props.handleSubmit();
+	};
+
+	// Selection handlers
+	const handleFontSelect = (selected: OptionType) => {
+		props.setFontFamily(selected);
 	};
 
 	return (
@@ -43,7 +67,18 @@ export const ArticleParamsForm = () => {
 			<ArrowButton isOpen={isOpen} handleClick={handleClick} />
 			<aside className={cn(styles.container, openStyle)} ref={formContainer}>
 				<form className={styles.form} onSubmit={handleFormSubmit}>
-					<Select selected={null} options={fontFamilyOptions} title='Шрифт' />
+					<Select
+						selected={props.fontFamily}
+						options={fontFamilyOptions}
+						title='Шрифт'
+						onChange={handleFontSelect}
+					/>
+					<RadioGroup
+						title='размер шрифта'
+						name='fontSizeOptions'
+						options={fontSizeOptions}
+						selected={fontSizeOptions[0]}
+					/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' type='reset' />
 						<Button title='Применить' type='submit' />
