@@ -3,9 +3,11 @@ import { Button } from 'components/button';
 import { RadioGroup } from 'components/radio-group';
 import { Select } from 'components/select';
 import {
+	ArticleStateType,
 	OptionType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -24,22 +26,13 @@ import {
 import { Separator } from '../separator';
 
 type TArticleProps = {
-	fontFamily: OptionType;
-	setFontFamily: Dispatch<SetStateAction<OptionType>>;
-	fontSize: OptionType;
-	setFontSize: Dispatch<SetStateAction<OptionType>>;
-	fontColor: OptionType;
-	setFontColor: Dispatch<SetStateAction<OptionType>>;
-	bgColor: OptionType;
-	setBgColor: Dispatch<SetStateAction<OptionType>>;
-	contentWidth: OptionType;
-	setContentWidth: Dispatch<SetStateAction<OptionType>>;
-	handleReset: () => void;
-	handleSubmit: () => void;
+	setArticleStyleState: Dispatch<SetStateAction<ArticleStateType>>;
 };
 
 export const ArticleParamsForm = (props: TArticleProps) => {
 	const [isOpen, setOpen] = useState(false);
+	const [formState, setFormState] =
+		useState<ArticleStateType>(defaultArticleState);
 	const formContainer = useRef<HTMLElement>(null);
 
 	useEffect(() => {
@@ -66,8 +59,18 @@ export const ArticleParamsForm = (props: TArticleProps) => {
 
 	const handleFormSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		props.handleSubmit();
+		props.setArticleStyleState(formState);
 	};
+
+	const handleReset = () => {
+		props.setArticleStyleState(defaultArticleState);
+		setFormState(defaultArticleState);
+	};
+
+	const handleOptionChange =
+		(changedParam: keyof ArticleStateType) => (selected: OptionType) => {
+			setFormState({ ...formState, [changedParam]: selected });
+		};
 
 	return (
 		<>
@@ -76,38 +79,38 @@ export const ArticleParamsForm = (props: TArticleProps) => {
 				<form className={styles.form} onSubmit={handleFormSubmit}>
 					<Select
 						title='Шрифт'
-						selected={props.fontFamily}
+						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={props.setFontFamily}
+						onChange={handleOptionChange('fontFamilyOption')}
 					/>
 					<RadioGroup
 						title='размер шрифта'
 						name='fontSizeOptions'
-						selected={props.fontSize}
+						selected={formState.fontSizeOption}
 						options={fontSizeOptions}
-						onChange={props.setFontSize}
+						onChange={handleOptionChange('fontSizeOption')}
 					/>
 					<Select
 						title='Цвет шрифта'
-						selected={props.fontColor}
+						selected={formState.fontColor}
 						options={fontColors}
-						onChange={props.setFontColor}
+						onChange={handleOptionChange('fontColor')}
 					/>
 					<Separator />
 					<Select
 						title='Цвет фона'
-						selected={props.bgColor}
+						selected={formState.backgroundColor}
 						options={backgroundColors}
-						onChange={props.setBgColor}
+						onChange={handleOptionChange('backgroundColor')}
 					/>
 					<Select
 						title='Ширина контента'
-						selected={props.contentWidth}
+						selected={formState.contentWidth}
 						options={contentWidthArr}
-						onChange={props.setContentWidth}
+						onChange={handleOptionChange('contentWidth')}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' onClick={props.handleReset} />
+						<Button title='Сбросить' type='reset' onClick={handleReset} />
 						<Button title='Применить' type='submit' />
 					</div>
 				</form>
