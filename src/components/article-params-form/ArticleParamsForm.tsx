@@ -24,6 +24,7 @@ import {
 	useState,
 } from 'react';
 import { Separator } from '../separator';
+import { useClose } from './useClose';
 
 type TArticleProps = {
 	setArticleStyleState: Dispatch<SetStateAction<ArticleStateType>>;
@@ -35,20 +36,7 @@ export const ArticleParamsForm = (props: TArticleProps) => {
 		useState<ArticleStateType>(defaultArticleState);
 	const formContainer = useRef<HTMLElement>(null);
 
-	useEffect(() => {
-		const handleClickOutsideForm = (event: MouseEvent) => {
-			if (
-				formContainer.current &&
-				!formContainer.current.contains(event.target as Node)
-			) {
-				setOpen(false);
-			}
-		};
-		document.addEventListener('mousedown', handleClickOutsideForm);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutsideForm);
-		};
-	}, []);
+	useClose({ isOpen, onClose: () => setOpen(false), rootRef: formContainer });
 
 	const openStyle = isOpen ? styles.container_open : null;
 
