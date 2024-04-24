@@ -4,6 +4,9 @@ import { RadioGroup } from 'components/radio-group';
 import { Select } from 'components/select';
 import {
 	OptionType,
+	backgroundColors,
+	contentWidthArr,
+	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
@@ -18,11 +21,20 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { Separator } from '../separator';
 
 type TArticleProps = {
 	fontFamily: OptionType;
 	setFontFamily: Dispatch<SetStateAction<OptionType>>;
-	handleReset?: () => void;
+	fontSize: OptionType;
+	setFontSize: Dispatch<SetStateAction<OptionType>>;
+	fontColor: OptionType;
+	setFontColor: Dispatch<SetStateAction<OptionType>>;
+	bgColor: OptionType;
+	setBgColor: Dispatch<SetStateAction<OptionType>>;
+	contentWidth: OptionType;
+	setContentWidth: Dispatch<SetStateAction<OptionType>>;
+	handleReset: () => void;
 	handleSubmit: () => void;
 };
 
@@ -57,30 +69,45 @@ export const ArticleParamsForm = (props: TArticleProps) => {
 		props.handleSubmit();
 	};
 
-	// Selection handlers
-	const handleFontSelect = (selected: OptionType) => {
-		props.setFontFamily(selected);
-	};
-
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} handleClick={handleClick} />
 			<aside className={cn(styles.container, openStyle)} ref={formContainer}>
 				<form className={styles.form} onSubmit={handleFormSubmit}>
 					<Select
+						title='Шрифт'
 						selected={props.fontFamily}
 						options={fontFamilyOptions}
-						title='Шрифт'
-						onChange={handleFontSelect}
+						onChange={props.setFontFamily}
 					/>
 					<RadioGroup
 						title='размер шрифта'
 						name='fontSizeOptions'
+						selected={props.fontSize}
 						options={fontSizeOptions}
-						selected={fontSizeOptions[0]}
+						onChange={props.setFontSize}
+					/>
+					<Select
+						title='Цвет шрифта'
+						selected={props.fontColor}
+						options={fontColors}
+						onChange={props.setFontColor}
+					/>
+					<Separator />
+					<Select
+						title='Цвет фона'
+						selected={props.bgColor}
+						options={backgroundColors}
+						onChange={props.setBgColor}
+					/>
+					<Select
+						title='Ширина контента'
+						selected={props.contentWidth}
+						options={contentWidthArr}
+						onChange={props.setContentWidth}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' />
+						<Button title='Сбросить' type='reset' onClick={props.handleReset} />
 						<Button title='Применить' type='submit' />
 					</div>
 				</form>

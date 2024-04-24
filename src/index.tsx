@@ -46,6 +46,21 @@ const App = () => {
 		});
 	};
 
+	const handleFormReset = () => {
+		setFontFamilyState(defaultArticleState.fontFamilyOption);
+		setFontSizeState(defaultArticleState.fontSizeOption);
+		setFontColorState(defaultArticleState.fontColor);
+		setBackgrounColorState(defaultArticleState.backgroundColor);
+		setContentWidthState(defaultArticleState.contentWidth);
+		setArticleStyleState({
+			fontFamily: defaultArticleState.fontFamilyOption.value,
+			fontSize: defaultArticleState.fontSizeOption.value,
+			fontColor: defaultArticleState.fontColor.value,
+			contentWidth: defaultArticleState.backgroundColor.value,
+			bgColor: defaultArticleState.contentWidth.value,
+		});
+	};
+
 	return (
 		<div
 			className={clsx(styles.main)}
@@ -61,7 +76,16 @@ const App = () => {
 			<ArticleParamsForm
 				fontFamily={fontFamilyState}
 				setFontFamily={setFontFamilyState}
+				fontSize={fontSizeState}
+				setFontSize={setFontSizeState}
+				fontColor={fontColorState}
+				setFontColor={setFontColorState}
+				bgColor={backgroundColorState}
+				setBgColor={setBackgrounColorState}
+				contentWidth={contentWidthState}
+				setContentWidth={setContentWidthState}
 				handleSubmit={handleFormSubmit}
+				handleReset={handleFormReset}
 			/>
 			<Article />
 		</div>
